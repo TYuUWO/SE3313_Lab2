@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <string>
 
 /*
 struct MyShared{
@@ -7,8 +9,18 @@ struct MyShared{
 
 int main(void)
 {
+	bool typeYes = true;
+	string userInput = "";
 	std::cout << "I am a Writer" << std::endl;
-	
+	while (typeYes){
+		std::cout << "Do you want to make a new thread? (type \"yes\" to continue writing)" << std::endl;
+		std::cin >> userInput;
+		//thread code
+		std::cout << std::endl;
+		if (userInput != "yes"){
+			typeYes = false;
+		}
+	}
 	////////////////////////////////////////////////////////////////////////
 	// This is a possible starting point for using threads and shared memory. 
 	// You do not have to start with this
