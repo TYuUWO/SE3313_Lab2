@@ -1,26 +1,42 @@
 #include <iostream>
 #include <thread>
 #include <string>
-
+#include <unistd.h>
+using namespace std;
 /*
 struct MyShared{
 	...;
 };*/
+int task1(int delay) {
+cout << "Delay: "<< delay << endl;
+sleep(delay);
+return 0;
+}
+
+bool checkResponse(string response) {
+return response == "yes";
+}
+
 
 int main(void)
 {
+	string secTime;
+	string response;
 	bool typeYes = true;
-	string userInput = "";
 	std::cout << "I am a Writer" << std::endl;
-	while (typeYes){
+	while (typeYes) {
 		std::cout << "Do you want to make a new thread? (type \"yes\" to continue writing)" << std::endl;
-		std::cin >> userInput;
-		//thread code
-		std::cout << std::endl;
-		if (userInput != "yes"){
-			typeYes = false;
+		cin >> response;
+		typeYes = checkResponse(response);
+		if (typeYes){
+			cout << "What is the delay time for this thread?" << endl;
+			cin >> secTime;
+			std::thread t1(task1, std::stoi(secTime));
+			t1.join();
 		}
 	}
+	return EXIT_SUCCESS;
+	
 	////////////////////////////////////////////////////////////////////////
 	// This is a possible starting point for using threads and shared memory. 
 	// You do not have to start with this
