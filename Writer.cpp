@@ -7,34 +7,68 @@
 using namespace std;
 
 struct MyShared{
+	int threadID;
+	int reportID;
+	double timerVar;
+	int setThreadID(int id){
+		threadID = id;
+		return 0;
+	};
+	int setReportID(int id){
+		reportID = id;
+		return 0;
+	};
+	int setTimer(double timer){
+		timerVar = timer;
+		return 0;
+	};
+	int getThreadID(){
+		return threadID;
+	}
+	int getReportID(){
+		return reportID;
+	}
+	double getTimer(){
+		return timerVar;
+	}
+	
+} threadID, reportID, timerVar;
 
-};
 namespace{
 	volatile bool typeYes = true;
 }
 
-/*
-int task1(int delay, int numThread) {
-
-	int threadID;
-	int reportID;
-	double timerVar;
-} threadID, reportID, timerVar;
-*/
 int task1(int delay, int numThread) {
 int i = 0;
+time_t timer;
+time_t prevTime;
+Shared<MyShared> shared("sharedMemory"); //create a local instance of "shared"
+MyShared* sharedPoint = shared.get();
+MyShared sharedStruct = (*sharedPoint);
+
+time(&prevTime);
 
 while(typeYes){
 	i++;
 	cout << "Thread #: " << numThread << " Delay: "<< delay <<  " Iteration: " << i << endl;
 	sleep(delay);
+	sharedStruct.setThreadID(numThread);
+	sharedStruct.setReportID(i);
+	time(&timer);
+	sharedStruct.setTimer(difftime(timer,prevTime));
+	prevTime = timer;
+	
+	(*sharedPoint) = sharedStruct; //update global copy of MyShared
+	
+	//comment out later
+	//std::cout << to_string(sharedStruct.getThreadID()) + " " + to_string(sharedStruct.getReportID()) + " " + std::to_string(sharedStruct.getTimer()) <<std::endl;
 }
 
 return 0;
 }
 
 int main(void) {
-	//Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMamory
+	Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMamory
 	std::vector<std::thread> threads;
 	string secTime;
 	string response;
