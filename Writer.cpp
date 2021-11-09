@@ -4,10 +4,13 @@
 #include <unistd.h>
 #include <vector>
 using namespace std;
-/*
+
 struct MyShared{
-	...;
-};*/
+	int threadID;
+	int reportID;
+	double time;
+} threadID, report ID, time;
+
 int task1(int delay,bool typeYes, int numThread) {
 int i = 0;
 while(typeYes){
@@ -19,6 +22,8 @@ return 0;
 }
 
 int main(void) {
+	Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMamory
+	
 	std::vector<std::thread> threads;
 	string secTime;
 	string response;
