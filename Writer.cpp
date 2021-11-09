@@ -1,3 +1,4 @@
+#include "./SharedObject.h"
 #include <iostream>
 #include <thread>
 #include <string>
@@ -8,8 +9,8 @@ using namespace std;
 struct MyShared{
 	int threadID;
 	int reportID;
-	double time;
-} threadID, report ID, time;
+	double timerVar;
+} threadID, reportID, timerVar;
 
 int task1(int delay,bool typeYes, int numThread) {
 int i = 0;
