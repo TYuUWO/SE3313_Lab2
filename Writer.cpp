@@ -2,41 +2,47 @@
 #include <thread>
 #include <string>
 #include <unistd.h>
+#include <vector>
 using namespace std;
 /*
 struct MyShared{
 	...;
 };*/
-int task1(int delay) {
-cout << "Delay: "<< delay << endl;
-sleep(delay);
+int task1(int delay,bool typeYes, int numThread) {
+int i = 0;
+while(typeYes){
+	sleep(delay);
+	i++;
+	cout << "Thread #: " << numThread << " Delay: "<< delay <<  " Iteration: " << i << endl;
+}
 return 0;
 }
 
-bool checkResponse(string response) {
-return response == "yes";
-}
-
-
-int main(void)
-{
+int main(void) {
+	std::vector<std::thread> threads;
 	string secTime;
 	string response;
+	int n = 0;
 	bool typeYes = true;
 	std::cout << "I am a Writer" << std::endl;
 	while (typeYes) {
+		n++;
 		std::cout << "Do you want to make a new thread? (type \"yes\" to continue writing)" << std::endl;
 		cin >> response;
-		typeYes = checkResponse(response);
+		typeYes = (response == "yes");
 		if (typeYes){
 			cout << "What is the delay time for this thread?" << endl;
 			cin >> secTime;
-			std::thread t1(task1, std::stoi(secTime));
-			t1.join();
+			threads.push_back(thread(task1, std::stoi(secTime), typeYes, n));
 		}
 	}
+	for (thread &th : threads){
+		th.join();
+	}
+
 	return EXIT_SUCCESS;
-	
+	//Note: can't terminate thread yet
+	//Compile code via g++ -pthread Writer.cpp
 	////////////////////////////////////////////////////////////////////////
 	// This is a possible starting point for using threads and shared memory. 
 	// You do not have to start with this
