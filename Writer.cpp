@@ -1,18 +1,26 @@
+#include "./SharedObject.h"
 #include <iostream>
 #include <thread>
 #include <string>
 #include <unistd.h>
 #include <vector>
 using namespace std;
-/*
+
 struct MyShared{
-	...;
-};*/
+
+};
 namespace{
 	volatile bool typeYes = true;
 }
 
+/*
+int task1(int delay, int numThread) {
 
+	int threadID;
+	int reportID;
+	double timerVar;
+} threadID, reportID, timerVar;
+*/
 int task1(int delay, int numThread) {
 int i = 0;
 
@@ -26,6 +34,7 @@ return 0;
 }
 
 int main(void) {
+	//Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMamory
 	std::vector<std::thread> threads;
 	string secTime;
 	string response;
@@ -48,6 +57,7 @@ int main(void) {
 
 	return EXIT_SUCCESS;
 	//Note: can't terminate thread yet
+
 	//Compile code via g++ -pthread Writer.cpp
 	////////////////////////////////////////////////////////////////////////
 	// This is a possible starting point for using threads and shared memory. 
