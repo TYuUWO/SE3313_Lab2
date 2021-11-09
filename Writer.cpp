@@ -8,13 +8,20 @@ using namespace std;
 struct MyShared{
 	...;
 };*/
-int task1(int delay,bool typeYes, int numThread) {
+namespace{
+	volatile bool typeYes = true;
+}
+
+
+int task1(int delay, int numThread) {
 int i = 0;
+
 while(typeYes){
-	sleep(delay);
 	i++;
 	cout << "Thread #: " << numThread << " Delay: "<< delay <<  " Iteration: " << i << endl;
+	sleep(delay);
 }
+
 return 0;
 }
 
@@ -23,7 +30,6 @@ int main(void) {
 	string secTime;
 	string response;
 	int n = 0;
-	bool typeYes = true;
 	std::cout << "I am a Writer" << std::endl;
 	while (typeYes) {
 		n++;
@@ -33,7 +39,7 @@ int main(void) {
 		if (typeYes){
 			cout << "What is the delay time for this thread?" << endl;
 			cin >> secTime;
-			threads.push_back(thread(task1, std::stoi(secTime), typeYes, n));
+			threads.push_back(thread(task1, std::stoi(secTime), n));
 		}
 	}
 	for (thread &th : threads){
