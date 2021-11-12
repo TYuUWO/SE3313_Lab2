@@ -1,4 +1,5 @@
 #include "./SharedObject.h"
+#include "./Semaphore.h"
 #include <iostream>
 #include <thread>
 #include <string>
@@ -45,6 +46,8 @@ time_t prevTime;
 Shared<MyShared> shared("sharedMemory"); //create a local instance of "shared"
 MyShared* sharedPoint = shared.get();
 MyShared sharedStruct = (*sharedPoint);
+Semaphore sharedSem("sharedSem"); //create a local instance of "sharedSem"
+
 
 time(&prevTime);
 
@@ -52,6 +55,7 @@ while(typeYes){
 	i++;
 	cout << "Thread #: " << numThread << " Delay: "<< delay <<  " Iteration: " << i << endl;
 	sleep(delay);
+	sharedSem.Wait(); //writing process begins after the wait
 	sharedStruct.setThreadID(numThread);
 	sharedStruct.setReportID(i);
 	time(&timer);
@@ -59,6 +63,7 @@ while(typeYes){
 	prevTime = timer;
 	
 	(*sharedPoint) = sharedStruct; //update global copy of MyShared
+	sharedSem.Signal();
 	
 	//comment out later
 	//std::cout << to_string(sharedStruct.getThreadID()) + " " + to_string(sharedStruct.getReportID()) + " " + std::to_string(sharedStruct.getTimer()) <<std::endl;
@@ -68,7 +73,8 @@ return 0;
 }
 
 int main(void) {
-	Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMamory
+	Shared<MyShared> shared("sharedMemory", true); //This is the owner of sharedMemory
+	Semaphore sharedSem("sharedSem", 1, true); //This is the owner of sharedSem
 	std::vector<std::thread> threads;
 	string secTime;
 	string response;
