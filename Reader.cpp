@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "SharedObject.h"
+#include "Semaphore.h"
 #include <unistd.h>
 using namespace std;
 struct MyShared{
@@ -38,6 +39,9 @@ int main(void)
 	Shared<MyShared> shared("sharedMemory");
 	MyShared* sharedPoint = shared.get();
 	MyShared sharedStruct = (*sharedPoint);
+	Semaphore sharedSem1("sharedSem1");
+	Semaphore sharedSem2("sharedSem2");
+	
 	bool read = true;
 	std::cout << "I am a reader" << std::endl;
 	//struct* sharedPoint = shared.get()
@@ -45,9 +49,13 @@ int main(void)
 	while(read){
 		MyShared* sharedPoint = shared.get();
 		MyShared sharedStruct = (*sharedPoint); //update local copy of MyShared
+		sharedSem2.Wait();
+		sharedSem1.Signal();
 		
 		std::cout << to_string(sharedStruct.getThreadID()) + " " + to_string(sharedStruct.getReportID()) + " " + std::to_string(sharedStruct.getTimer()) <<std::endl;
-		usleep(1000000);
+
+		sharedSem1.Wait();
+//		usleep(1000000);
 	}
 }
 
